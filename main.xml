@@ -3,8 +3,10 @@
 <suite name="Auto Test Suite">
     <test name="Smoke Tests">
         <classes>
-            <class name="testcase.Login_Test"/>
-            <class name="testcase.Logout_Test"/>
+            <class name="testcase.Login_Email"/>
+            <class name="testcase.Login_Google"/>
+            <class name="testcase.Logout"/>
+
         </classes>
     </test>
 </suite>
