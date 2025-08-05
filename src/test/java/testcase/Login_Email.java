@@ -9,6 +9,7 @@ import utils.DriverFactory;
 public class Login_Email {
     WebDriver driver;
 
+
     @BeforeMethod
     public void setUp() {
         ChromeOptions options = new ChromeOptions();

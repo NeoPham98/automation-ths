@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="auto-test-gk" />
+        <module name="automation-ths" />
       </profile>
     </annotationProcessing>
   </component>
