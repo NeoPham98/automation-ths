@@ -1,1 +1,0 @@
-{"uuid":"85c42502-3d51-4284-ae30-cada96e34671","name":"testcase.LoginGoogle_Test.setUp","children":["e5037040-d35a-476c-bd26-7cef63a192ab"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1753858696127,"stop":1753858697670}],"afters":[],"start":1753858696127,"stop":1753858697670}

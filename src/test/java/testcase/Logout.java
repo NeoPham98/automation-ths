@@ -21,7 +21,7 @@ public class Logout {
     }
 
     @Test
-    public void Logout_Test() throws InterruptedException {
+    public void Logout_Check() throws InterruptedException {
         Thread.sleep(3000); // đợi trang load sau login
 
         // Click vào avatar

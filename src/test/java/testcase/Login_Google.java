@@ -21,7 +21,7 @@ public class Login_Google {
     }
 
     @Test
-    public void LoginGoogle_Test() throws InterruptedException {
+    public void LoginGoogle_Check() throws InterruptedException {
 
         Thread.sleep(1000);
         // Click Đăng nhập bằng google

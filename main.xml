@@ -6,6 +6,8 @@
             <class name="testcase.Login_Email"/>
             <class name="testcase.Login_Google"/>
             <class name="testcase.Logout"/>
+            <class name="testcase.Create_Other_Material"/>
+
 
         </classes>
     </test>

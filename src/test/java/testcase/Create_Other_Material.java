@@ -25,7 +25,7 @@ public class Create_Other_Material {
 
     }
     @Test
-    public void CreateOtherMaterial_Test() throws InterruptedException {
+    public void CreateOtherMaterial_Check() throws InterruptedException {
 
         // Click kho học liệu trên header
         WebDriverWait loading = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -35,7 +35,7 @@ public class Create_Other_Material {
         material.click();
 
         // Click tạo
-        Thread.sleep(2000);
+        Thread.sleep(3000);
         WebElement buttonCreate = new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable(
                         By.xpath("//button[span[text()='Tạo']]")
@@ -63,7 +63,7 @@ public class Create_Other_Material {
         //Nhập tên file
         Thread.sleep(5000);
         WebElement inputTitle = driver.findElement(By.xpath("//input[@placeholder='Nhập tiêu đề']"));
-        inputTitle.sendKeys("Smoke Test 01");
+        inputTitle.sendKeys("Bài giảng Smoke Test");
         Thread.sleep(1000);
 
         WebElement inputDescription = driver.findElement(By.xpath("//textarea[@placeholder='Nhập mô tả']"));
@@ -185,7 +185,7 @@ public class Create_Other_Material {
                         By.xpath("//button[@aria-haspopup='dialog']//input[@placeholder='Nhập Biên soạn/biên dịch']")
                 ));
 
-        inputCompilation.sendKeys("Trình Trần Phương Tuấn", Keys.ENTER);
+        inputCompilation.sendKeys("Trịnh Trần Phương Tuấn", Keys.ENTER);
 
 
         // Nhập Nguồn sở hữu
@@ -205,7 +205,10 @@ public class Create_Other_Material {
         nextButton2.click();
 
 
-
+        Thread.sleep(1000);
+        WebElement goToDetail = new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[normalize-space()='Xem chi tiết']")));
+        goToDetail.click();
 
 
     }

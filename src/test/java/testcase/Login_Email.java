@@ -16,7 +16,7 @@ public class Login_Email {
     }
 
     @Test
-    public void LoginEmail_Test() throws InterruptedException {
+    public void LoginEmail_Check() throws InterruptedException {
 
         Thread.sleep(1000);
         // Nhập email và mật khẩu
