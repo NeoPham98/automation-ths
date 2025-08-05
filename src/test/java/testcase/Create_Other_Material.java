@@ -1,6 +1,7 @@
 package testcase;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
@@ -12,12 +13,18 @@ public class Create_Other_Material {
     WebDriver driver;
 
     @BeforeMethod
-    public void setUp() {
-        driver = DriverFactory.getDriver();
+    public void setUp() throws InterruptedException{
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-blink-features=AutomationControlled"); // giảm phát hiện tự động
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.addArguments("start-maximized");
+
+        driver = DriverFactory.getDriver(options);
         driver.manage().window().maximize();
-        driver.get("https://dev.gkebooks.click/sign-in");
 
         // Login
+        Thread.sleep(5000); // Đợi bạn xử lý CAPTCHA Cloudflare thủ công
         driver.findElement(By.name("email")).sendKeys("test@email.com");
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
         driver.findElement(By.cssSelector("button[type='submit']")).click();

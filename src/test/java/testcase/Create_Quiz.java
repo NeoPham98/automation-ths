@@ -1,6 +1,7 @@
 package testcase;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,16 +16,23 @@ public class Create_Quiz {
     WebDriverWait wait;
 
     @BeforeMethod
-    public void setUp() {
-        driver = DriverFactory.getDriver();
+    public void setUp() throws InterruptedException{
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-blink-features=AutomationControlled"); // giảm phát hiện tự động
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.addArguments("start-maximized");
+
+        driver = DriverFactory.getDriver(options);
         driver.manage().window().maximize();
         driver.get("https://dev.gkebooks.click/sign-in");
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+        Thread.sleep(5000); // hoặc nhiều hơn nếu CAPTCHA chưa xong
         login("test@email.com", "Nkg@6688");
     }
 
-    private void login(String email, String password) {
+    private void login(String email, String password)  {
+
         driver.findElement(By.name("email")).sendKeys(email);
         driver.findElement(By.name("password")).sendKeys(password);
         driver.findElement(By.cssSelector("button[type='submit']")).click();
@@ -113,6 +121,33 @@ public class Create_Quiz {
                 .pause(Duration.ofMillis(200))
                 .perform();
     }
+    public void inputBlankBox(String[] texts) {
+        List<WebElement> editors = wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(
+                By.cssSelector("div#latex-editor-content div.ProseMirror[contenteditable='true']"),
+                texts.length - 1 // Đảm bảo có ít nhất n phần tử
+        ));
+
+        for (int i = 0; i < texts.length; i++) {
+            WebElement editor = editors.get(i);
+
+            // Scroll và focus vào ô hiện tại
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", editor);
+
+            // Nếu có thẻ <p> bên trong thì click vào p thay vì div
+            WebElement pTag = editor.findElement(By.tagName("p"));
+
+            Actions actions = new Actions(driver);
+            actions.moveToElement(pTag)
+                    .click()
+                    .pause(Duration.ofMillis(200))
+                    .sendKeys(Keys.chord(Keys.CONTROL, "a"))
+                    .sendKeys(Keys.BACK_SPACE)
+                    .sendKeys(texts[i])
+                    .pause(Duration.ofMillis(300))
+                    .perform();
+        }
+    }
+
 
 
     private void inputTextLength(By by, String text) throws InterruptedException {
@@ -136,11 +171,31 @@ public class Create_Quiz {
         ));
         button.click();
     }
+    public void scrollDown(int pixels) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0, arguments[0]);", pixels);
+    }
+
+    public void uploadFile(String filePath) {
+        // Tìm phần tử input type="file"
+        WebElement uploadInput = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//input[@type='file']")
+        ));
+
+        // Bỏ ẩn phần tử nếu đang bị hidden bằng style
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+
+        // Gửi file path để upload
+        uploadInput.sendKeys(filePath);
+    }
+
+
+
 
     @Test
     public void CreateQuiz_Check() throws InterruptedException {
-        clickElement(By.cssSelector("a[href='/materials']"));
-        clickElement(By.xpath("//button[span[text()='Tạo']]"));
+        clickElement(By.cssSelector("a[href='/kho-hoc-lieu']"));
+        clickElement(By.xpath("//button[.//span[normalize-space()='Tạo']]"));
         clickElement(By.xpath("//div[p[text()='Bộ đề']]"));
 
         fillInput(By.xpath("//input[@placeholder='Nhập tiêu đề']"), "Bộ đề Smoke Test");
@@ -161,18 +216,23 @@ public class Create_Quiz {
 
         clickElement(By.xpath("//button[normalize-space()='Lưu']"));
 
-        //===========================================TRẮC NGHIỆM========================================================
+//===========================================TRẮC NGHIỆM================================================================
 //        clickElement(By.xpath("//button[contains(., 'Thêm câu hỏi')]"));
 //        clickElement(By.xpath("//h3[normalize-space()='Tạo thủ công']"));
 //        clickElement(By.xpath("//span[normalize-space()='Trắc nghiệm']"));
+//        clickElement(By.cssSelector("button:has(svg.lucide-image)"));
+//        Thread.sleep(1000);
+//        uploadFile("C:\\Users\\GHC\\Downloads\\Data\\sampleIMG.jpg");
+//        Thread.sleep(500);
+//        clickElement(By.xpath("//div[@role='dialog']//button[normalize-space()='Lưu']"));
 //        addEditableContents(new String[]{"Trắc nghiệm smoke test", "A. Đáp án A", "B. Đáp án B"});
 //        clickElement(By.cssSelector("button[role='checkbox']"));
 //        selectDropdown(By.xpath("//button[@role='combobox' and .//span[text()='Không tính']]"), "1 điểm");
 //        fillInput(By.xpath("//input[@type='text' and @value='15' and contains(@class, 'text-center')]"), "60");
 //        clickElement(By.xpath("//button[normalize-space()='Lưu']"));
+//        Thread.sleep(1000);
 
-
-        //===========================================TỰ LUẬN============================================================
+//===========================================TỰ LUẬN====================================================================
 //        clickElement(By.xpath("//button[contains(., 'Thêm câu hỏi')]"));
 //        clickElement(By.xpath("//h3[normalize-space()='Tạo thủ công']"));
 //        clickElement(By.xpath("//span[normalize-space()='Tự luận']"));
@@ -186,14 +246,89 @@ public class Create_Quiz {
 //        selectDropdown(By.xpath("//button[@role='combobox' and .//span[text()='Không tính']]"), "1 điểm");
 //        fillInput(By.xpath("//input[@type='text' and contains(@class, 'text-center')]"), "60");
 //        clickElement(By.xpath("//button[normalize-space()='Lưu']"));
+//        Thread.sleep(1000);
 
+//===========================================ĐIỀN TỪ====================================================================
+//        clickElement(By.xpath("//button[contains(., 'Thêm câu hỏi')]"));
+//        clickElement(By.xpath("//h3[normalize-space()='Tạo thủ công']"));
+//        clickElement(By.xpath("//span[normalize-space()='Điền vào chỗ trống']"));
+//        addEditableContents(new String[]{"Chào mừng đến với __ và __"});
+//        inputBlankBox(new String[] {
+//                "NKG",
+//                "Techainer",
+//
+//        });
+//        selectDropdown(By.xpath("//button[@role='combobox' and .//span[text()='Không tính']]"), "1 điểm");
+//        fillInput(By.xpath("//input[@type='text' and contains(@class, 'text-center')]"), "60");
+//        clickElement(By.xpath("//button[normalize-space()='Lưu']"));
+//        Thread.sleep(1000);
 
-        //===========================================ĐIỀN TỪ============================================================
+//===========================================GHÉP ĐÔI===================================================================
         clickElement(By.xpath("//button[contains(., 'Thêm câu hỏi')]"));
         clickElement(By.xpath("//h3[normalize-space()='Tạo thủ công']"));
-        clickElement(By.xpath("//span[normalize-space()='Điền vào chỗ trống']"));
-        addEditableContents(new String[]{"Điền từ smoke test __"});
+        clickElement(By.xpath("//span[normalize-space()='Ghép đôi']"));
+        clickElement(By.cssSelector("button:has(svg.lucide-image)"));
         Thread.sleep(1000);
+        uploadFile("C:\\Users\\GHC\\Downloads\\Data\\sampleIMG.jpg");
+        Thread.sleep(500);
+        clickElement(By.xpath("//div[@role='dialog']//button[normalize-space()='Lưu']"));
+        Thread.sleep(1500);
+        addEditableContents(new String[]
+                {
+                        "Ghép đôi smoke test",
+                        "1",
+                        "1",
+                        "2",
+                        "2",
+                        "3",
+                        "3",
+
+                });
+
+        clickElement(By.cssSelector("button:has(svg.lucide-image):nth-of-type(1)"));
+        Thread.sleep(1000);
+        uploadFile("C:\\Users\\GHC\\Downloads\\Data\\sampleIMG.jpg");
+        Thread.sleep(500);
+        clickElement(By.xpath("//div[@role='dialog']//button[normalize-space()='Lưu']"));
+
+        clickElement(By.cssSelector("button:has(svg.lucide-image):nth-of-type(2)"));
+        Thread.sleep(1000);
+        uploadFile("C:\\Users\\GHC\\Downloads\\Data\\sampleIMG.jpg");
+        Thread.sleep(500);
+        clickElement(By.xpath("//div[@role='dialog']//button[normalize-space()='Lưu']"));
+
+        selectDropdown(By.xpath("//button[@role='combobox' and .//span[text()='Không tính']]"), "1 điểm");
+        fillInput(By.xpath("//input[@type='text' and contains(@class, 'text-center')]"), "60");
+        clickElement(By.xpath("//button[normalize-space()='Lưu']"));
+        Thread.sleep(1000);
+
+
+// ===========================================HỘP THẢ===================================================================
+//        clickElement(By.xpath("//button[contains(., 'Thêm câu hỏi')]"));
+//        clickElement(By.xpath("//h3[normalize-space()='Tạo thủ công']"));
+//        clickElement(By.xpath("//span[normalize-space()='Hộp thả']"));
+//        addEditableContents(new String[]{"Phân số 2/3 có Tử số là __ và mẫu số là __"});
+//        clickElement(By.cssSelector("button:has(svg.lucide-image)"));
+//        Thread.sleep(1000);
+//        uploadFile("C:\\Users\\GHC\\Downloads\\Data\\sampleIMG.jpg");
+//        Thread.sleep(500);
+//        clickElement(By.xpath("//div[@role='dialog']//button[normalize-space()='Lưu']"));
+//        clickElement(By.xpath("(//button[span[normalize-space()='Thêm lựa chọn']])"));
+//        clickElement(By.xpath("(//button[span[normalize-space()='Thêm lựa chọn']])"));
+//        clickElement(By.xpath("(//button[span[normalize-space()='Thêm lựa chọn']])[2]"));
+//        clickElement(By.xpath("(//button[span[normalize-space()='Thêm lựa chọn']])[2]"));
+//        inputBlankBox(new String[] {
+//                "2",
+//                "3",
+//                "4",
+//                "5",
+//                "6",
+//                "7",
+//        });
+//        selectDropdown(By.xpath("//button[@role='combobox' and .//span[text()='Không tính']]"), "1 điểm");
+//        fillInput(By.xpath("//input[@type='text' and contains(@class, 'text-center')]"), "60");
+//        clickElement(By.xpath("//button[normalize-space()='Lưu']"));
+//        Thread.sleep(1000);
     }
 
 

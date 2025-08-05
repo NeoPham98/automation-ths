@@ -2,6 +2,7 @@ package testcase;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.*;
 import utils.DriverFactory;
 
@@ -10,16 +11,22 @@ public class Login_Email {
 
     @BeforeMethod
     public void setUp() {
-        driver = DriverFactory.getDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-blink-features=AutomationControlled"); // giảm phát hiện tự động
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.addArguments("start-maximized");
+
+        driver = DriverFactory.getDriver(options);
         driver.manage().window().maximize();
         driver.get("https://dev.gkebooks.click/sign-in");
     }
 
     @Test
     public void LoginEmail_Check() throws InterruptedException {
+        // Đợi bạn xử lý CAPTCHA Cloudflare thủ công
+        Thread.sleep(5000); // hoặc nhiều hơn nếu CAPTCHA chưa xong
 
-        Thread.sleep(1000);
-        // Nhập email và mật khẩu
         driver.findElement(By.name("email")).sendKeys("test@email.com");
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
 
@@ -31,8 +38,9 @@ public class Login_Email {
 
         // In tiêu đề trang để kiểm tra
         String title = driver.getTitle();
+        System.out.println("Title after login: " + title);
 
-        // Kiểm tra điều kiện sau đăng nhập (thay đổi nếu cần)
+        // Kiểm tra điều kiện sau đăng nhập
         assert title.contains("Dashboard") || title.contains("Trang chủ") || !title.contains("Đăng nhập");
     }
 

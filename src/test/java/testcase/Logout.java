@@ -2,6 +2,7 @@ package testcase;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.*;
 import utils.DriverFactory;
 
@@ -9,12 +10,19 @@ public class Logout {
     WebDriver driver;
 
     @BeforeMethod
-    public void setUp() {
-        driver = DriverFactory.getDriver();
+    public void setUp() throws InterruptedException{
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-blink-features=AutomationControlled"); // giảm phát hiện tự động
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.addArguments("start-maximized");
+
+        driver = DriverFactory.getDriver(options);
         driver.manage().window().maximize();
         driver.get("https://dev.gkebooks.click/sign-in");
 
         // Đăng nhập trước khi logout
+        Thread.sleep(5000);
         driver.findElement(By.name("email")).sendKeys("test@email.com");
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
         driver.findElement(By.cssSelector("button[type='submit']")).click();

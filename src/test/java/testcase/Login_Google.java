@@ -2,6 +2,7 @@ package testcase;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
@@ -14,7 +15,13 @@ public class Login_Google {
 
     @BeforeMethod
     public void setUp() {
-        driver = DriverFactory.getDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-blink-features=AutomationControlled"); // giảm phát hiện tự động
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.addArguments("start-maximized");
+
+        driver = DriverFactory.getDriver(options);
         driver.manage().window().maximize();
         driver.get("https://dev.gkebooks.click/sign-in");
 
