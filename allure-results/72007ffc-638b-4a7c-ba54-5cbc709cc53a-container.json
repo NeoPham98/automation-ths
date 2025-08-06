@@ -1,1 +1,0 @@
-{"uuid":"72007ffc-638b-4a7c-ba54-5cbc709cc53a","name":"testcase.Read_Books.setUp","children":["80ed250d-2730-4da8-8a53-6ef5bdf887fb"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1754501563614,"stop":1754501578095}],"afters":[],"start":1754501563613,"stop":1754501578095}
