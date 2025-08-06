@@ -12,6 +12,7 @@ public class Login_Email {
 
     @BeforeMethod
     public void setUp() {
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled"); // giảm phát hiện tự động
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
@@ -29,6 +30,7 @@ public class Login_Email {
         Thread.sleep(5000); // hoặc nhiều hơn nếu CAPTCHA chưa xong
 
         driver.findElement(By.name("email")).sendKeys("test@email.com");
+        Thread.sleep(800);
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
         Thread.sleep(800);
         // Click nút "Đăng nhập ngay"

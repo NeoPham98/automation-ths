@@ -32,6 +32,7 @@ public class Create_Other_Material {
 
         Thread.sleep(5000); // Đợi xử lý CAPTCHA
         driver.findElement(By.name("email")).sendKeys("test@email.com");
+        Thread.sleep(800);
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
         Thread.sleep(800);
         driver.findElement(By.cssSelector("button[type='submit']")).click();

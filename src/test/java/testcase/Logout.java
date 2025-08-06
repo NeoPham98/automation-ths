@@ -26,6 +26,7 @@ public class Logout {
         // Đăng nhập trước khi logout
         Thread.sleep(5000);
         driver.findElement(By.name("email")).sendKeys("test@email.com");
+        Thread.sleep(800);
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
         Thread.sleep(800);
         driver.findElement(By.cssSelector("button[type='submit']")).click();

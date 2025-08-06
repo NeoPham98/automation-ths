@@ -48,8 +48,9 @@
 
     <build>
         <plugins>
-            <!-- Biên dịch Java 21 -->
+            <!-- Biên dịch Java 17 -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>

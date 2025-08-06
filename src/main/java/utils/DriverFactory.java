@@ -5,6 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class DriverFactory {
     private static WebDriver driver;
 
@@ -26,6 +29,8 @@ public class DriverFactory {
     // Overloaded method: dùng khi test class tự cấu hình ChromeOptions
     public static WebDriver getDriver(ChromeOptions options) {
         if (driver == null) {
+            Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
+            Logger.getLogger("org.openqa.selenium.devtools").setLevel(Level.OFF);
             WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver(options);
         }

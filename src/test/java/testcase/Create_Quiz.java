@@ -37,6 +37,7 @@ public class Create_Quiz {
     private void login(String email, String password)  throws InterruptedException{
 
         driver.findElement(By.name("email")).sendKeys(email);
+        Thread.sleep(800);
         driver.findElement(By.name("password")).sendKeys(password);
         Thread.sleep(800);
         driver.findElement(By.cssSelector("button[type='submit']")).click();
