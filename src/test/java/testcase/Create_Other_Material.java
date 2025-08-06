@@ -28,7 +28,7 @@ public class Create_Other_Material {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         driver.manage().window().maximize();
-        driver.get("https://dev.gkebooks.click/sign-in");
+        driver.get("https://dev.gkebooks.click/dang-nhap");
 
         Thread.sleep(5000); // Đợi xử lý CAPTCHA
         driver.findElement(By.name("email")).sendKeys("test@email.com");
@@ -141,10 +141,11 @@ public class Create_Other_Material {
         Thread.sleep(2000);
         WebElement uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
-        uploadInput.sendKeys("C:\\Users\\NCPC\\Downloads\\DataTest\\samplePPTX.pptx");
+        uploadInput.sendKeys("D:\\Data\\samplepptx.pptx");
+
 
         createMaterials(
-                "Học liệu smoke test",
+                "Bài giảng smoke test",
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                 "Công khai",
                 "Đạo đức",
@@ -157,7 +158,184 @@ public class Create_Other_Material {
                 "Trịnh Trần Phương Tuấn",
                 "Thiên An"
         );
+        System.out.println("Học liệu bài giảng: Passed");
+
+//==============================================SCROM / xAPI============================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='Scrom / xAPI']]"));
+        // Upload file
+        Thread.sleep(2000);
+        uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys("D:\\Data\\Que_diem.zip");
+
+        createMaterials(
+                "Scrom smoke test",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Toán",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
+        System.out.println("Học liệu Scrom / xAPI: Passed");
+
+
+//==============================================TÀI LIỆU============================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='Tài liệu']]"));
+        // Upload file
+        Thread.sleep(2000);
+        uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys("D:\\Data\\TXT_sample.txt");
+
+        createMaterials(
+                "Tài liệu smoke test",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Toán",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
+        System.out.println("Học liệu Tài liệu: Passed");
+
+
+//==============================================ÂM THANH================================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='Âm thanh']]"));
+        // Upload file
+        Thread.sleep(2000);
+        uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys("D:\\Data\\AUDIO_sample.mp3");
+
+        createMaterials(
+                "Âm thanh smoke test",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Toán",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
+        System.out.println("Học liệu Âm thanh: Passed");
+
+
+//==============================================VIDEO===================================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='Video']]"));
+        // Upload file
+        Thread.sleep(2000);
+        uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys("D:\\Data\\Video.mp4");
+
+        createMaterials(
+                "Video smoke test",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Toán",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
+        System.out.println("Học liệu Video: Passed");
+
+
+//==============================================HÌNH ẢNH================================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='Hình ảnh']]"));
+        // Upload file
+        Thread.sleep(2000);
+        uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys("D:\\Data\\GIF_sample.gif");
+
+        createMaterials(
+                "Hình ảnh smoke test (GIF)",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Toán",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
+        System.out.println("Học liệu Video: Passed");
+
+
+//==============================================3D======================================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='3D / VR']]"));
+        // Upload file
+        Thread.sleep(2000);
+        uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys("D:\\Data\\3D_sample.glb");
+
+        createMaterials(
+                "3D / VR smoke test",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Toán",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
+        System.out.println("Học liệu 3D / VR: Passed");
+
+
+//==============================================HỌC LIỆU NÂNG CAO=======================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='Học liệu nâng cao']]"));
+        // Upload file
+        Thread.sleep(2000);
+        uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys("D:\\Data\\Robot_Finding_Treasure.zip");
+
+        createMaterials(
+                "Học liệu nâng cao smoke test",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Toán",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
+        System.out.println("Học liệu nâng cao: Passed");
+
     }
+
 
 
 

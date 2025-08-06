@@ -28,7 +28,7 @@ public class Create_Quiz {
 
         driver = DriverFactory.getDriver(options);
         driver.manage().window().maximize();
-        driver.get("https://dev.gkebooks.click/sign-in");
+        driver.get("https://dev.gkebooks.click/dang-nhap");
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         Thread.sleep(7000); // hoặc nhiều hơn nếu CAPTCHA chưa xong
         login("test@email.com", "Nkg@6688");
@@ -40,6 +40,7 @@ public class Create_Quiz {
         Thread.sleep(800);
         driver.findElement(By.name("password")).sendKeys(password);
         Thread.sleep(800);
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
         driver.findElement(By.cssSelector("button[type='submit']")).click();
     }
 

@@ -21,7 +21,7 @@ public class Login_Email {
 
         driver = DriverFactory.getDriver(options);
         driver.manage().window().maximize();
-        driver.get("https://dev.gkebooks.click/sign-in");
+        driver.get("https://dev.gkebooks.click/dang-nhap");
     }
 
     @Test

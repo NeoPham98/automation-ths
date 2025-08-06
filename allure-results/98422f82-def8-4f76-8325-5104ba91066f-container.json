@@ -1,0 +1,1 @@
+{"uuid":"98422f82-def8-4f76-8325-5104ba91066f","name":"testcase.Logout.setUp","children":["042445eb-7e5b-4e2f-a012-26cd615af677"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1754466310724,"stop":1754466319616}],"afters":[],"start":1754466310723,"stop":1754466319616}
