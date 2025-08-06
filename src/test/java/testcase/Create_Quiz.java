@@ -34,10 +34,11 @@ public class Create_Quiz {
         login("test@email.com", "Nkg@6688");
     }
 
-    private void login(String email, String password)  {
+    private void login(String email, String password)  throws InterruptedException{
 
         driver.findElement(By.name("email")).sendKeys(email);
         driver.findElement(By.name("password")).sendKeys(password);
+        Thread.sleep(800);
         driver.findElement(By.cssSelector("button[type='submit']")).click();
     }
 

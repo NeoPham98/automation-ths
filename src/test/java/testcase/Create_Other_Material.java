@@ -2,223 +2,164 @@ package testcase;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import utils.DriverFactory;
 
 import java.time.Duration;
 
 public class Create_Other_Material {
     WebDriver driver;
+    WebDriverWait wait;
 
     @BeforeMethod
-    public void setUp() throws InterruptedException{
+    public void setUp() throws InterruptedException {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-blink-features=AutomationControlled"); // giảm phát hiện tự động
+        options.addArguments("--disable-blink-features=AutomationControlled");
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.setExperimentalOption("useAutomationExtension", false);
         options.addArguments("start-maximized");
 
         driver = DriverFactory.getDriver(options);
-        driver.manage().window().maximize();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        // Login
-        Thread.sleep(5000); // Đợi bạn xử lý CAPTCHA Cloudflare thủ công
+        driver.manage().window().maximize();
+        driver.get("https://dev.gkebooks.click/sign-in");
+
+        Thread.sleep(5000); // Đợi xử lý CAPTCHA
         driver.findElement(By.name("email")).sendKeys("test@email.com");
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
+        Thread.sleep(800);
         driver.findElement(By.cssSelector("button[type='submit']")).click();
-
-
     }
+    private void clickElement(By locator) {
+        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+    }
+
+    private void type(By locator, String text) {
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(input)
+                .click()
+                .pause(Duration.ofMillis(300))
+                .keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL)
+                .sendKeys(Keys.DELETE)
+                .sendKeys(text)
+                .pause(Duration.ofMillis(500))
+                .perform();
+    }
+
+
+    private void selectDropdown(String visibleText) {
+        clickElement(By.xpath("//button[@role='combobox']"));
+        clickElement(By.xpath("//div[@role='option' or @role='menuitem'][normalize-space()='" + visibleText + "']"));
+    }
+
+    private void selectOption(String label, String option) {
+        clickElement(By.xpath("//button[@role='combobox' and .//span[text()='" + label + "']]"));
+        clickElement(By.xpath("//div[contains(@role,'option') or contains(@role,'menuitem')][normalize-space()='" + option + "']"));
+    }
+
+    private void inputMetadata(String placeholder, String value) {
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//button[@aria-haspopup='dialog']//input[@placeholder='" + placeholder + "']")));
+        input.sendKeys(value, Keys.ENTER);
+    }
+
+    public void createMaterials(
+            String title,
+            String description,
+            String visibility,
+            String subject,
+            String grade,
+            String level,
+            String language,
+            String year,
+            String author,
+            String chiefEditor,
+            String compiler,
+            String ownership
+    ) throws InterruptedException {
+        // Tiêu đề & mô tả
+        Thread.sleep(5000);
+        type(By.xpath("//input[@placeholder='Nhập tiêu đề']"), title);
+        Thread.sleep(800);
+        type(By.xpath("//textarea[@placeholder='Nhập mô tả']"), description);
+        Thread.sleep(800);
+        // Chọn công khai/riêng tư
+        selectDropdown(visibility);
+        clickElement(By.xpath("//button[normalize-space()='Tiếp theo']"));
+        Thread.sleep(800);
+        // Các combo box lựa chọn
+        selectOption("Chọn bộ môn", subject);
+        Thread.sleep(800);
+        selectOption("Chọn khối lớp", grade);
+        Thread.sleep(800);
+        selectOption("Chọn cấp độ", level);
+        Thread.sleep(800);
+        selectOption("Chọn ngôn ngữ", language);
+        Thread.sleep(800);
+        selectOption("Chọn năm sản xuất", year);
+        Thread.sleep(800);
+
+        // Metadata
+        inputMetadata("Nhập tác giả", author);
+        Thread.sleep(800);
+        inputMetadata("Nhập Tổng chủ biên/chủ biên", chiefEditor);
+        Thread.sleep(800);
+        inputMetadata("Nhập Biên soạn/biên dịch", compiler);
+        Thread.sleep(800);
+        inputMetadata("Nhập nội dung", ownership);
+        Thread.sleep(800);
+
+        // Hoàn tất
+        clickElement(By.xpath("//button[normalize-space()='Tiếp theo']"));
+        Thread.sleep(800);
+        clickElement(By.xpath("//button[normalize-space()='Tạo học liệu khác']"));
+        Thread.sleep(1000);
+    }
+
+
     @Test
     public void CreateOtherMaterial_Check() throws InterruptedException {
-
-        // Click kho học liệu trên header
-        WebDriverWait loading = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement material = loading.until(ExpectedConditions.elementToBeClickable(
-                By.cssSelector("a[href='/materials']")
-        ));
-        material.click();
-
-        // Click tạo
+        clickElement(By.cssSelector("a[href='/kho-hoc-lieu']"));
         Thread.sleep(3000);
-        WebElement buttonCreate = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(
-                        By.xpath("//button[span[text()='Tạo']]")
-                ));
-        buttonCreate.click();
-
-        // Chọn Tạo học liệu khác
+        clickElement(By.xpath("//button[span[text()='Tạo']]"));
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//div[p[text()='Học liệu']]")).click();
-
-        // Chọn học liệu bài giảng
+        clickElement(By.xpath("//div[p[text()='Học liệu']]"));
         Thread.sleep(2000);
-        WebElement lesson = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(
-                        By.xpath("//figure[h3[normalize-space()='Bài giảng']]")
-                ));
-        lesson.click();
 
-        //Upload file pptx
+//==============================================BÀI GIẢNG===============================================================
+        clickElement(By.xpath("//figure[h3[normalize-space()='Bài giảng']]"));
+        // Upload file
         Thread.sleep(2000);
         WebElement uploadInput = driver.findElement(By.xpath("//input[@type='file']"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
-        uploadInput.sendKeys("C:\\Users\\GHC\\Downloads\\Data\\PPTX_sample.pptx");
+        uploadInput.sendKeys("C:\\Users\\NCPC\\Downloads\\DataTest\\samplePPTX.pptx");
 
-        //Nhập tên file
-        Thread.sleep(5000);
-        WebElement inputTitle = driver.findElement(By.xpath("//input[@placeholder='Nhập tiêu đề']"));
-        inputTitle.sendKeys("Bài giảng Smoke Test");
-        Thread.sleep(1000);
-
-        WebElement inputDescription = driver.findElement(By.xpath("//textarea[@placeholder='Nhập mô tả']"));
-        inputDescription.sendKeys("Lorem Ipsum is simply dummy text of the printing and typesetting industry.");
-        Thread.sleep(1000);
-
-        // Chọn Công khai hoặc riêng tư
-        WebElement comboBoxBtn = driver.findElement(By.xpath("//button[@role='combobox']"));
-        comboBoxBtn.click();
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement option = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[@role='option' or @role='menuitem'][normalize-space()='Công khai']") // Hoặc 'Riêng tư'
-        ));
-        option.click();
-
-        // Click tiếp theo
-        Thread.sleep(1000);
-        WebElement nextButton = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[normalize-space()='Tiếp theo']")));
-        nextButton.click();
-
-        // Chọn bộ môn
-        Thread.sleep(1000);
-        WebDriverWait waitChoiceSubject = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement optionSubject = waitChoiceSubject.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[@role='combobox' and .//span[text()='Chọn bộ môn']]")
-        ));
-        optionSubject.click();
-        // Chờ mục "Đạo đức" hiển thị và click
-        WebElement optionDaoDuc = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[contains(@role,'option') or contains(@role,'menuitem')][normalize-space()='Đạo đức']")
-        ));
-        optionDaoDuc.click();
-
-
-
-        // Chọn khối lớp
-        Thread.sleep(1000);
-        WebDriverWait waitChoiceClass = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement optionClass = waitChoiceClass.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[@role='combobox' and .//span[text()='Chọn khối lớp']]")
-        ));
-        optionClass.click();
-        // Chờ mục "Lớp 12" hiển thị và click
-        WebElement optionClass1 = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[contains(@role,'option') or contains(@role,'menuitem')][normalize-space()='Lớp 12']")
-        ));
-        optionClass1.click();
-
-
-
-        // Chọn cấp độ
-        Thread.sleep(1000);
-        WebDriverWait waitChoiceLevel = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement optionLevel = waitChoiceLevel.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[@role='combobox' and .//span[text()='Chọn cấp độ']]")
-        ));
-        optionLevel.click();
-        // Chờ mục "Lớp 12" hiển thị và click
-        WebElement optionLevel1 = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[contains(@role,'option') or contains(@role,'menuitem')][normalize-space()='Cơ bản']")
-        ));
-        optionLevel1.click();
-
-
-        // Chọn ngôn ngữ
-        Thread.sleep(1000);
-        WebDriverWait waitChoiceLanguage = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement optionLanguage = waitChoiceLanguage.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[@role='combobox' and .//span[text()='Chọn ngôn ngữ']]")
-        ));
-        optionLanguage.click();
-        // Chờ mục "Lớp 12" hiển thị và click
-        WebElement optionLanguage1 = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[contains(@role,'option') or contains(@role,'menuitem')][normalize-space()='Tiếng Việt']")
-        ));
-        optionLanguage1.click();
-
-
-        // Chọn năm sản xuất
-        Thread.sleep(1000);
-        WebDriverWait waitChoiceYear = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement optionYear = waitChoiceYear.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[@role='combobox' and .//span[text()='Chọn năm sản xuất']]")
-        ));
-        optionYear.click();
-        // Chờ mục "Năm" hiển thị và click
-        WebElement optionYear1 = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[contains(@role,'option') or contains(@role,'menuitem')][normalize-space()='2025']")
-        ));
-        optionYear1.click();
-
-        //Nhập tác giả
-        Thread.sleep(1000);
-        WebElement inputAuthor = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//button[@aria-haspopup='dialog']//input[@placeholder='Nhập tác giả']")
-                ));
-
-        inputAuthor.sendKeys("Hải Tú", Keys.ENTER);
-
-
-
-        // Nhập Tổng chủ biên/chủ biên
-        Thread.sleep(1000);
-        WebElement inputEditor = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//button[@aria-haspopup='dialog']//input[@placeholder='Nhập Tổng chủ biên/chủ biên']")
-                ));
-
-        inputEditor.sendKeys("Sơn Tùng MTP", Keys.ENTER);
-
-
-        // Nhập Biên soạn/biên dịch
-        Thread.sleep(1000);
-        WebElement inputCompilation = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//button[@aria-haspopup='dialog']//input[@placeholder='Nhập Biên soạn/biên dịch']")
-                ));
-
-        inputCompilation.sendKeys("Trịnh Trần Phương Tuấn", Keys.ENTER);
-
-
-        // Nhập Nguồn sở hữu
-        Thread.sleep(1000);
-        WebElement inputOnner = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//button[@aria-haspopup='dialog']//input[@placeholder='Nhập nội dung']")
-                ));
-
-        inputOnner.sendKeys("Thiên An", Keys.ENTER);
-
-
-        // Click tiếp theo
-        Thread.sleep(1000);
-        WebElement nextButton2 = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[normalize-space()='Tiếp theo']")));
-        nextButton2.click();
-
-
-        Thread.sleep(1000);
-        WebElement goToDetail = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(By.xpath("//button[normalize-space()='Xem chi tiết']")));
-        goToDetail.click();
-
-
+        createMaterials(
+                "Học liệu smoke test",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "Công khai",
+                "Đạo đức",
+                "Lớp 12",
+                "Cơ bản",
+                "Tiếng Việt",
+                "2025",
+                "Hải Tú",
+                "Sơn Tùng MTP",
+                "Trịnh Trần Phương Tuấn",
+                "Thiên An"
+        );
     }
+
+
+
     @AfterMethod
     public void tearDown() {
         DriverFactory.quitDriver();

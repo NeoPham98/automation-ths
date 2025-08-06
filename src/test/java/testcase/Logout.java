@@ -3,7 +3,9 @@ package testcase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import utils.DriverFactory;
 
 public class Logout {
@@ -25,8 +27,12 @@ public class Logout {
         Thread.sleep(5000);
         driver.findElement(By.name("email")).sendKeys("test@email.com");
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
+        Thread.sleep(800);
         driver.findElement(By.cssSelector("button[type='submit']")).click();
+
     }
+
+
 
     @Test
     public void Logout_Check() throws InterruptedException {
@@ -38,7 +44,7 @@ public class Logout {
         driver.findElement(By.xpath("//div[text()='Đăng xuất']")).click();
         Thread.sleep(3000); // đợi load lại trang login
         String title = driver.getTitle();
-
+        System.out.println("Logout thành công: " + title);
         // Kiểm tra đã quay lại trang đăng nhập
         assert title.contains("Đăng nhập");
     }

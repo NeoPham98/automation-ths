@@ -55,6 +55,8 @@ public class Login_Google {
         driver.findElement(By.name("Passwd")).sendKeys("Aptx4869#@!?");
         driver.findElement(By.xpath("//span[text()='Next']")).click();
         Thread.sleep(10000);
+        String title = driver.getTitle();
+        System.out.println("Login bằng Google thành công: " + title);
     }
 
     @AfterMethod

@@ -30,7 +30,7 @@ public class Login_Email {
 
         driver.findElement(By.name("email")).sendKeys("test@email.com");
         driver.findElement(By.name("password")).sendKeys("Nkg@6688");
-
+        Thread.sleep(800);
         // Click nút "Đăng nhập ngay"
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
@@ -39,7 +39,7 @@ public class Login_Email {
 
         // In tiêu đề trang để kiểm tra
         String title = driver.getTitle();
-        System.out.println("Title after login: " + title);
+        System.out.println("Login bằng Email thành công: " + title);
 
         // Kiểm tra điều kiện sau đăng nhập
         assert title.contains("Dashboard") || title.contains("Trang chủ") || !title.contains("Đăng nhập");
