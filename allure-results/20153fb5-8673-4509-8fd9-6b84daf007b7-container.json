@@ -1,0 +1,1 @@
+{"uuid":"20153fb5-8673-4509-8fd9-6b84daf007b7","name":"testcase.Login_Google.setUp","children":["86696acf-de71-4847-b631-9749e1510836"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1754504232160,"stop":1754504237606}],"afters":[],"start":1754504232159,"stop":1754504237606}

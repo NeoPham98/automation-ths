@@ -1,1 +1,0 @@
-{"uuid":"bbf29b79-0fe5-4111-ba15-fb1cf9def8c6","name":"testcase.Login_Email.setUp","children":["b306a29d-b9cf-4b9d-a166-af577087c02c"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1754448117428,"stop":1754448119887}],"afters":[],"start":1754448117428,"stop":1754448119888}

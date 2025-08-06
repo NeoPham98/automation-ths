@@ -3,10 +3,18 @@
 <suite name="Auto Test Suite">
     <test name="Smoke Tests">
         <classes>
-            <class name="testcase.Login_Email"/>
+            <!--Đăng nhập bằng Email và Đăng xuất-->
+            <class name="testcase.Login_Logout"/>
+            <!--Đăng nhập bằng Google-->
             <class name="testcase.Login_Google"/>
-            <class name="testcase.Logout"/>
+            <!--Đọc sách-->
+            <class name="testcase.Read_Books"/>
+            <!--Tạo học liệu khác-->
             <class name="testcase.Create_Other_Material"/>
+            <!--Tạo bộ đề-->
+            <class name="testcase.Create_Quiz"/>
+            <!--Chatbot-->
+            <class name="testcase.Chatbot"/>
 
 
         </classes>

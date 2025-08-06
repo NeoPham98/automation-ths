@@ -1,1 +1,0 @@
-{"uuid":"929cf509-1dd5-4108-b5d8-bc1584fad079","name":"testcase.Create_Quiz.setUp","children":["bae3b11e-2b0b-4483-a335-919769a6d8f7"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1754414151705,"stop":1754414161138}],"afters":[],"start":1754414151704,"stop":1754414161138}
