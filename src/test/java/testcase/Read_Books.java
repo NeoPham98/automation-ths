@@ -48,6 +48,10 @@ public class Read_Books {
             List<WebElement> bookDivs = driver.findElements(By.cssSelector("div.group"));
             WebElement thirdDiv = bookDivs.get(3);
             thirdDiv.findElement(By.xpath(".//button[normalize-space()='Bắt đầu ngay']")).click();
+            Thread.sleep(1000);
+
+            //Nhớ xoá cái này
+            clickElement(By.xpath(".//button[normalize-space()='Bắt đầu ngay']"));
 
     }
 
@@ -68,24 +72,115 @@ public class Read_Books {
             List<WebElement> buttons = driver.findElements(By.cssSelector("button.absolute.object-contain.cursor-pointer"));
             WebElement selected = buttons.get(3);
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", selected);
+
             Thread.sleep(3000);
-            new Actions(driver).sendKeys(Keys.ESCAPE).perform();
+            clickElement(By.xpath("//button[normalize-space()='Kiểm tra kết quả']"));
+            Thread.sleep(1000); // hoặc thay bằng wait nếu muốn
+
+        // Kiểm tra có div thông báo xuất hiện
+            By resultMessage = By.cssSelector("div.text-xl.flex.items-center.font-semibold.flex-1");
+
+             try {
+                wait.until(ExpectedConditions.visibilityOfElementLocated(resultMessage));
+
+                } catch (TimeoutException e) {
+                Assert.fail("Đọc sách: Failed - Lỗi làm quiz trong sách " + e.getMessage());
+            }
+            Thread.sleep(1000);
+                new Actions(driver).sendKeys(Keys.ESCAPE).perform();
+
+    }
+    private void filterMaterials() throws InterruptedException {
+        clickElement(By.xpath("//button[@role='combobox' and .//span[text()='Tất cả học liệu']]"));
+        Thread.sleep(300);
+        clickElement(By.xpath("//*[text()='Câu hỏi']"));
+        By resultSelector = By.cssSelector("div.flex.border.rounded-lg.transition-all.cursor-pointer");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(resultSelector));
+
+        } catch (TimeoutException e) {
+            Assert.fail("Đọc sách: Failed - Lọc không tìm thấy học liệu  'Câu hỏi'- " + e.getMessage());
+
+        }
+
+
+
+    }
+    private void searchMaterials() throws InterruptedException {
+        inputText(By.cssSelector("input[placeholder='Tìm kiếm']"), "quiz");
+        Thread.sleep(1000);
+
+        By resultSelector = By.cssSelector("div.flex.border.rounded-lg.transition-all.cursor-pointer");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(resultSelector));
+            inputText(By.cssSelector("input[placeholder='Tìm kiếm']"), "");
+        } catch (TimeoutException e) {
+            Assert.fail("Đọc sách: Failed - Không tìm thấy học liệu tên 'quiz'- " + e.getMessage());
+
+        }
 
     }
 
-    private void openMaterialsListAndCrop() throws InterruptedException{
 
-            for (int i = 0; i < 2; i++) {
-                clickElement(By.cssSelector("button:has(svg.lucide-list)"));
-                Thread.sleep(200);
-            }
-            for (int i = 0; i < 2; i++) {
-                clickElement(By.cssSelector("button:has(svg.lucide-file-video)"));
-                Thread.sleep(200);
-            }
-            clickElement(By.cssSelector("button:has(svg.lucide-crop)"));
-            Thread.sleep(1000);
 
+    private void toggleSidebarStrictCheck(String svgIconName, By targetDivSelector) throws InterruptedException {
+        By buttonSelector = By.cssSelector("button:has(svg.lucide-" + svgIconName + ")");
+
+        // Click lần 1 — kiểm tra xem sidebar có đang ẩn (phải có translate-x-full)
+        clickElement(buttonSelector);
+        Thread.sleep(300);
+
+        WebElement sidebar = wait.until(ExpectedConditions.presenceOfElementLocated(targetDivSelector));
+        String classAfterClick1 = sidebar.getAttribute("class");
+
+        if (!classAfterClick1.contains("translate-x-full")) {
+            Assert.fail("Đọc sách: Failed - Sidebar không click đóng được");
+        }
+
+        // Click lần 2 — kiểm tra sidebar đã mở (không còn translate-x-full)
+        clickElement(buttonSelector);
+        Thread.sleep(300);
+
+        String classAfterClick2 = sidebar.getAttribute("class");
+
+        if (classAfterClick2.contains("translate-x-full")) {
+            Assert.fail("Đọc sách: Failed - Sidebar không click mở được");
+        }
+    }
+
+
+    private void openMaterialsListAndCrop() throws InterruptedException {
+        // Sidebar list (bên trái)
+        By listSidebarSelector = By.cssSelector("div.border-r.bg-white");
+
+        // Sidebar file-video (bên phải)
+        By videoSidebarSelector = By.cssSelector("div.border-l.bg-white.right-0");
+
+        toggleSidebarStrictCheck("list", listSidebarSelector);
+        toggleSidebarStrictCheck("file-video", videoSidebarSelector);
+
+
+        clickElement(By.cssSelector("button:has(svg.lucide-crop)"));
+        Thread.sleep(1000);
+        // Click nút "Kiểm tra kết quả"
+
+    }
+
+    private void inputText(By locator, String text) {
+        WebElement input = wait.until(ExpectedConditions.elementToBeClickable(locator));
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(input)
+                .click()
+                .pause(Duration.ofMillis(300))
+                .keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL)
+                .sendKeys(Keys.BACK_SPACE)
+                .sendKeys(text)
+                .pause(Duration.ofMillis(500))
+                .perform();
     }
 
     public void checkChatbotReply() throws InterruptedException{
@@ -148,6 +243,8 @@ public class Read_Books {
             goToBookAndStart();
             nextPagesAndZoom();
             selectMaterialButton();
+            searchMaterials();
+            filterMaterials();
             openMaterialsListAndCrop();
             checkChatbotReply();
             Thread.sleep(2000);
