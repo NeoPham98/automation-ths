@@ -50,9 +50,6 @@ public class Read_Books {
             thirdDiv.findElement(By.xpath(".//button[normalize-space()='Bắt đầu ngay']")).click();
             Thread.sleep(1000);
 
-            //Nhớ xoá cái này
-            clickElement(By.xpath(".//button[normalize-space()='Bắt đầu ngay']"));
-
     }
 
     private void nextPagesAndZoom() throws InterruptedException {

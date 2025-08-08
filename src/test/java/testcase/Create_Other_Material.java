@@ -70,6 +70,7 @@ public class Create_Other_Material {
         WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//button[@aria-haspopup='dialog']//input[@placeholder='" + placeholder + "']")));
         input.sendKeys(value, Keys.ENTER);
+
     }
 
     public void createMaterials(

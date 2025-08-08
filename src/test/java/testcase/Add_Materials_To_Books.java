@@ -1,9 +1,6 @@
 package testcase;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -93,17 +90,162 @@ public class Add_Materials_To_Books {
                     .pause(Duration.ofMillis(300))     // pause nhỏ giữa các click
                     .perform();
 
-            if (i == 2){
-                inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu bài giảng");
-
+            if (i == 0){
+                uploadQuiz();
+//                uploadLecture();
+            }
+            else if (i == 1){
+                uploadScrom();
+            }
+            else if (i == 2){
+                uploadDocument();
+            }
+            else if (i == 3){
+                uploadAudio();
+            }
+            else if (i == 4){
+                uploadVideo();
+            }
+            else if (i == 5){
+                uploadImage();
+            }
+            else if (i == 6){
+                upload3D();
+            }
+            else if (i == 7){
+                uploadInteractive();
+            }
+            else if (i == 8){
+                uploadQuiz();
             }
         }
-
-
-
         Thread.sleep(3000);
     }
 
+    private void uploadFile(String filePath) {
+        WebElement uploadInput = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//input[@type='file']")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].style.display = 'block';", uploadInput);
+        uploadInput.sendKeys(filePath);
+    }
+
+    private void clickInOpenDialog(By relativeBy) {
+        WebElement dialog = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("div[role='dialog'][data-state='open']"))
+        );
+        WebElement el = dialog.findElement(relativeBy);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", el);
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(el)).click();
+        } catch (Exception ignore) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", el);
+        }
+    }
+
+    private void selectOption(String label, String option) throws InterruptedException {
+        clickElement(By.xpath("//button[@role='combobox' and .//span[text()='" + label + "']]"));
+        clickElement(By.xpath("//div[contains(@role,'option') or contains(@role,'menuitem')][normalize-space()='" + option + "']"));
+    }
+
+    public void uploadLecture() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu bài giảng");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Bài giảng']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\samplepptx.pptx");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void uploadScrom() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu Scrom");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Scrom / xAPI']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\Que_diem.zip");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void uploadDocument() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Tài liệu");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Tài liệu']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\DOCX_sample.docx");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void uploadAudio() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu âm thanh");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Âm thanh']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\AUDIO_sample.mp3");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void uploadVideo() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu video");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Video']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\Video.mp4");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void uploadImage() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu hình ảnh");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Hình ảnh']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\sampleIMG.jpg");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void upload3D() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu 3D");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='3D / VR']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\3D_sample.glb");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void uploadInteractive() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Học liệu nâng cao");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Học liệu nâng cao']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        uploadFile("D:\\Data\\Robot_Finding_Treasure.zip");
+        Thread.sleep(500);
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
+
+    public void uploadQuiz() throws InterruptedException{
+        inputText(By.cssSelector("input[placeholder='Nhập tên học liệu']"), "Bộ đề");
+        clickElement(By.cssSelector("button:has(svg.lucide-plus)"));
+        clickInOpenDialog(By.xpath(".//p[normalize-space()='Câu hỏi']/ancestor::figure[1]"));
+        Thread.sleep(500);
+        selectOption("Chọn khối lớp", "Lớp 3");
+        Thread.sleep(500);
+        selectOption("Chọn bộ đề", "Công nghệ 3 - Bài 2: Sử dụng đèn học");
+        clickElement(By.cssSelector("button.text-white.bg-blue-900"));
+        Thread.sleep(3000);
+    }
 
     @BeforeMethod
     public void setUp() throws InterruptedException{
