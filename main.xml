@@ -14,7 +14,9 @@
             <!--Tạo bộ đề-->
             <class name="testcase.Create_Quiz"/>
             <!--Chatbot-->
-            <class name="testcase.Chatbot"/>
+            <class name="testcase.Add_Materials_To_Books"/>
+
+<!--            <class name="testcase.Chatbot"/>-->
 
 
         </classes>

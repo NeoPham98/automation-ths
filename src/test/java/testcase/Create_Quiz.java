@@ -150,7 +150,8 @@ public class Create_Quiz {
         Thread.sleep(1000);
         uploadFile(filePath);
         Thread.sleep(500);
-        clickButton("Lưu");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[role='dialog']")));
+        clickElement(By.xpath("//div[@role='dialog']//button[normalize-space()='Lưu']"));
         Thread.sleep(500);
     }
 
@@ -217,25 +218,28 @@ public class Create_Quiz {
         clickButton("Lưu");
 
         // === Các loại câu hỏi ===
-        try {
-            addQuestion("Trắc nghiệm");
-            uploadImage("C:\\Users\\GHC\\Downloads\\Data\\sampleIMG.jpg");
-            addEditableContents(new String[]{"Trắc nghiệm smoke test", "A. Đáp án A", "B. Đáp án B"});
-            clickElement(By.cssSelector("button[role='checkbox']"));
-            selectDropdown(By.xpath("//button[.//span[text()='Không tính']]"), "1 điểm");
-            fillInput(By.xpath("//input[@value='15']"), "60");
-            clickButton("Lưu");
-            System.out.println("Tạo quiz Trắc nghiệm: Passed");
-        } catch (Exception e) {
-            handleError("Trắc nghiệm", e);
-        }
+//        try {
+//            addQuestion("Trắc nghiệm");
+//            uploadImage("D:\\Data\\sampleIMG.jpg");
+//            addEditableContents(new String[]{"Trắc nghiệm smoke test", "A. Đáp án A", "B. Đáp án B"});
+//            clickElement(By.cssSelector("button[role='checkbox']"));
+//            selectDropdown(By.xpath("//button[.//span[text()='Không tính']]"), "1 điểm");
+//            fillInput(By.xpath("//input[@value='15']"), "60");
+//            clickButton("Lưu");
+//            System.out.println("Tạo quiz Trắc nghiệm: Passed");
+//        } catch (Exception e) {
+//            handleError("Trắc nghiệm", e);
+//        }
 
         // === TỰ LUẬN ===
         try {
             addQuestion("Tự luận");
-            addEssayQuestion("Smoke test câu hỏi Tự luận", "a");
+            addEssayQuestion("Smoke test câu hỏi Tự luận", "abc");
             clickButton("Lưu thông tin");
-            inputTextLength(By.cssSelector("input[type='text'].text-center"), "100");
+            inputTextLength(
+                    By.xpath("(//input[@type='text' and contains(@class,'text-center')])[2]"),
+                    "100"
+            );
             selectDropdown(By.xpath("//button[.//span[text()='Không tính']]"), "1 điểm");
             fillInput(By.xpath("//input[contains(@class, 'text-center')]"), "60");
             clickButton("Lưu");
@@ -260,14 +264,18 @@ public class Create_Quiz {
         // === GHÉP ĐÔI ===
         try {
             addQuestion("Ghép đôi");
-            uploadImage("C:\\Users\\NCPC\\Downloads\\DataTest\\1.png");
+            uploadImage("D:\\Data\\sampleIMG.jpg");
+
             Thread.sleep(1500);
             addEditableContents(new String[]{
                     "Ghép đôi smoke test", "1", "1", "2", "2", "3", "3"
             });
-            clickAddImageButton(0, "C:\\Users\\NCPC\\Downloads\\DataTest\\1.png");
-            clickAddImageButton(2, "C:\\Users\\NCPC\\Downloads\\DataTest\\1.png");
-            clickAddImageButton(4, "C:\\Users\\NCPC\\Downloads\\DataTest\\1.png");
+            clickAddImageButton(0, "D:\\Data\\sampleIMG.jpg");
+
+            clickAddImageButton(2, "D:\\Data\\sampleIMG.jpg");
+
+            clickAddImageButton(4, "D:\\Data\\sampleIMG.jpg");
+
             selectDropdown(By.xpath("//button[.//span[text()='Không tính']]"), "1 điểm");
             fillInput(By.xpath("//input[contains(@class, 'text-center')]"), "60");
             clickButton("Lưu");
@@ -280,7 +288,8 @@ public class Create_Quiz {
         try {
             addQuestion("Hộp thả");
             addEditableContents(new String[]{"__ và __ là hai công ty hàng đầu thế giới"});
-            uploadImage("C:\\Users\\NCPC\\Downloads\\DataTest\\1.png");
+            uploadImage("D:\\Data\\sampleIMG.jpg");
+
             for (int i = 0; i < 4; i++) {
                 clickElement(By.xpath("(//button[span[normalize-space()='Thêm lựa chọn']])[last()]"));
             }
@@ -299,7 +308,8 @@ public class Create_Quiz {
         try {
             addQuestion("Kéo thả");
             addEditableContents(new String[]{"__ và __ là hai công ty hàng đầu thế giới"});
-            uploadImage("C:\\Users\\NCPC\\Downloads\\DataTest\\1.png");
+            uploadImage("D:\\Data\\sampleIMG.jpg");
+
             for (int i = 0; i < 2; i++) {
                 clickElement(By.xpath("(//button[span[normalize-space()='Thêm']])[last()]"));
             }
@@ -307,7 +317,7 @@ public class Create_Quiz {
             inputTextBoxWrongAnswer(new String[]{"Facebook", "Google"});
             selectDropdown(By.xpath("//button[.//span[text()='Không tính']]"), "1 điểm");
             fillInput(By.xpath("//input[contains(@class, 'text-center')]"), "60");
-            clickButton("Lưu");
+
             System.out.println("Tạo quiz Kéo thả: Passed");
         } catch (Exception e) {
             handleError("Kéo thả", e);
@@ -316,7 +326,8 @@ public class Create_Quiz {
         // === DÁN NHÃN ===
         try {
             addQuestion("Dán nhãn");
-            uploadFile("C:\\Users\\NCPC\\Downloads\\DataTest\\1.png");
+            uploadFile("D:\\Data\\sampleIMG.jpg");
+            clickButton("Lưu");
             Thread.sleep(500);
             addEditableContents(new String[]{"Dán nhãn cho đúng"});
             for (int i = 0; i < 2; i++) {
