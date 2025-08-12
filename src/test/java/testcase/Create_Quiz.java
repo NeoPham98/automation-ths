@@ -91,20 +91,25 @@ public class Create_Quiz {
                 By.xpath("//div[@id='quiz-studio-editor']//div[@contenteditable='true']")));
         Actions actions = new Actions(driver).moveToElement(editor).click().pause(Duration.ofMillis(300));
         for (String line : questionText.split("\n")) {
-            actions.sendKeys(line).sendKeys(Keys.ENTER).pause(Duration.ofMillis(200));
+            actions.sendKeys(line).sendKeys(Keys.ENTER).pause(Duration.ofMillis(500));
         }
         actions.perform();
 
-        clickButton("Thiết lập");
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("(//button[normalize-space()='Thiết lập'])[2]")
+        )).click();
 
         WebElement inputArea = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("div#latex-editor-content div.ProseMirror[contenteditable='true']")));
         ((JavascriptExecutor) driver).executeScript("arguments[0].focus();", inputArea);
 
-        new Actions(driver).moveToElement(inputArea)
-                .click().pause(Duration.ofMillis(200))
+        new Actions(driver)
+                .moveToElement(inputArea)
+                .click()
+                .pause(Duration.ofMillis(500))
                 .sendKeys(answerSample)
-                .pause(Duration.ofMillis(200)).perform();
+                .pause(Duration.ofMillis(500))
+                .perform();
     }
 
     private void inputBlankBox(String[] texts) {
@@ -161,7 +166,8 @@ public class Create_Quiz {
         Thread.sleep(1000);
         uploadFile(filePath);
         Thread.sleep(500);
-        clickButton("Lưu");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[role='dialog']")));
+        clickElement(By.xpath("//div[@role='dialog']//button[normalize-space()='Lưu']"));
         Thread.sleep(500);
     }
 
@@ -241,7 +247,8 @@ public class Create_Quiz {
                     "100"
             );
             selectDropdown(By.xpath("//button[.//span[text()='Không tính']]"), "1 điểm");
-            fillInput(By.xpath("//input[contains(@class, 'text-center')]"), "60");
+            fillInput(By.xpath("(//input[@type='text' and contains(@class,'text-center')])[1]"),
+                    "60");
             clickButton("Lưu");
             System.out.println("Tạo quiz Tự luận: Passed");
         } catch (Exception e) {
