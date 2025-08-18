@@ -38,7 +38,7 @@ public class Add_Materials_To_Books {
         SCORM("Scrom / xAPI", "Học liệu Scrom", "D:\\Data\\Que_diem.zip", 3000),
         DOCUMENT("Tài liệu", "Tài liệu", "D:\\Data\\DOCX_sample.docx", 5000),
         AUDIO("Âm thanh", "Học liệu âm thanh", "D:\\Data\\AUDIO_sample.mp3", 5000),
-        VIDEO("Video", "Học liệu video", "D:\\Data\\Video.mp4", 5000),
+        VIDEO("Video", "Học liệu video", "D:\\Data\\Video.mp4", 15000),
         IMAGE("Hình ảnh", "Học liệu hình ảnh", "D:\\Data\\sampleIMG.jpg", 5000),
         THREE_D("3D / VR", "Học liệu 3D", "D:\\Data\\3D_sample.glb", 5000),
         INTERACTIVE("Học liệu nâng cao", "Học liệu nâng cao", "D:\\Data\\Robot_Finding_Treasure.zip", 5000),
@@ -139,13 +139,13 @@ public class Add_Materials_To_Books {
         new Actions(driver).moveToElement(element).pause(Duration.ofMillis(800)).perform();
     }
 
-    private void login(String email, String password) {
+    private void login(String email, String password) throws InterruptedException {
         driver.findElement(By.name("email")).sendKeys(email);
-        sleep(300);
+        Thread.sleep(800);
         driver.findElement(By.name("password")).sendKeys(password);
-        sleep(300);
+        Thread.sleep(800);
         driver.findElement(By.cssSelector("button[type='submit']")).click();
-        sleep(800);
+        Thread.sleep(800);
     }
 
     private void goToBookAndEdit() {
@@ -231,6 +231,26 @@ public class Add_Materials_To_Books {
             actions[i] = () -> addByUpload(type);
         }
         placePinsAndRun(getBookImageArea(), defaultPinOffsets(), actions);
+        sleep(2000);
+    }
+
+    private void addMaterialsByWarehouse() {
+        click(BTN_STAR);
+        sleep(200);
+
+        Runnable[] actions = new Runnable[PIN_TYPES.size()];
+        for (int i = 0; i < PIN_TYPES.size(); i++) {
+            final int idx = i;
+            actions[i] = () -> {
+                // 0..7 chọn từ kho; ô thứ 9 (idx=8) theo yêu cầu cũ: upload bài giảng
+                if (idx < 8) {
+                    addFromWarehouse(PIN_TYPES.get(idx));
+                } else {
+                    addByUpload(MaterialType.LECTURE);
+                }
+            };
+        }
+        placePinsAndRun(getBookImageArea(), defaultPinOffsets(), actions);
         sleep(1000);
     }
 
@@ -238,46 +258,26 @@ public class Add_Materials_To_Books {
 //        click(BTN_STAR);
 //        sleep(200);
 //
-//        Runnable[] actions = new Runnable[PIN_TYPES.size()];
-//        for (int i = 0; i < PIN_TYPES.size(); i++) {
-//            final int idx = i;
-//            actions[i] = () -> {
-//                // 0..7 chọn từ kho; ô thứ 9 (idx=8) theo yêu cầu cũ: upload bài giảng
-//                if (idx < 8) {
-//                    addFromWarehouse(PIN_TYPES.get(idx));
+//        int[][] allOffsets = defaultPinOffsets();
+//        int[][] offsets = java.util.Arrays.copyOfRange(allOffsets, 1, allOffsets.length); // bỏ index 0
+//
+//        Runnable[] actions = new Runnable[PIN_TYPES.size() - 1];
+//        for (int i = 1; i < PIN_TYPES.size(); i++) {
+//            final int originalIdx = i;          // 1..8
+//            final int targetIdx = i - 1;        // 0..7 trong mảng actions/offsets sau khi cắt
+//            actions[targetIdx] = () -> {
+//                if (originalIdx < 8) {
+//                    addFromWarehouse(PIN_TYPES.get(originalIdx));
 //                } else {
+//                    // phần tử thứ 9 theo logic cũ: upload bài giảng
 //                    addByUpload(MaterialType.LECTURE);
 //                }
 //            };
 //        }
-//        placePinsAndRun(getBookImageArea(), defaultPinOffsets(), actions);
+//
+//        placePinsAndRun(getBookImageArea(), offsets, actions);
 //        sleep(1000);
 //    }
-
-    private void addMaterialsByWarehouse() {
-        click(BTN_STAR);
-        sleep(200);
-
-        int[][] allOffsets = defaultPinOffsets();
-        int[][] offsets = java.util.Arrays.copyOfRange(allOffsets, 1, allOffsets.length); // bỏ index 0
-
-        Runnable[] actions = new Runnable[PIN_TYPES.size() - 1];
-        for (int i = 1; i < PIN_TYPES.size(); i++) {
-            final int originalIdx = i;          // 1..8
-            final int targetIdx = i - 1;        // 0..7 trong mảng actions/offsets sau khi cắt
-            actions[targetIdx] = () -> {
-                if (originalIdx < 8) {
-                    addFromWarehouse(PIN_TYPES.get(originalIdx));
-                } else {
-                    // phần tử thứ 9 theo logic cũ: upload bài giảng
-                    addByUpload(MaterialType.LECTURE);
-                }
-            };
-        }
-
-        placePinsAndRun(getBookImageArea(), offsets, actions);
-        sleep(1000);
-    }
 
     // ====== Sửa/Xoá/Lưu ======
     private void clickMaterialCardByTitle(String title) {
@@ -328,8 +328,8 @@ public class Add_Materials_To_Books {
     private void saveMaterials() {
         click(BTN_SAVE_BOOK);
         expectToastSuccess();
-        click(BTN_X);
-        sleep(300);
+//        click(BTN_X);
+//        sleep(1000);
 
 
     }
@@ -362,7 +362,7 @@ public class Add_Materials_To_Books {
 
     // ====== Test lifecycle ======
     @BeforeMethod
-    public void setUp() {
+    public void setUp() throws InterruptedException {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
@@ -374,9 +374,9 @@ public class Add_Materials_To_Books {
         driver.get("https://dev.gkebooks.click/dang-nhap");
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        sleep(3000);
+        sleep(7000);
         login("test@email.com", "Nkg@6688");
-        sleep(1500);
+        sleep(3000);
     }
 
     @Test
